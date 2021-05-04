@@ -25,8 +25,6 @@
 
 package kong.unirest;
 
-import kong.unirest.json.JSONElement;
-
 import java.nio.charset.Charset;
 
 public interface RequestBodyEntity extends HttpRequest<RequestBodyEntity>, Body {
@@ -56,7 +54,7 @@ public interface RequestBodyEntity extends HttpRequest<RequestBodyEntity>, Body 
      * @param body the JSONElement
      * @return this request builder
      */
-    RequestBodyEntity body(JSONElement body);
+    // RequestBodyEntity body(JSONElement body);
 
     /**
      * Set a Object as the body of the request. This will be serialized with one of the following methods:

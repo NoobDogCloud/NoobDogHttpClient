@@ -28,7 +28,10 @@ package kong.unirest;
 import java.io.File;
 import java.nio.file.CopyOption;
 import java.time.Instant;
-import java.util.*;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -38,7 +41,7 @@ import static kong.unirest.CallbackFuture.wrap;
 
 abstract class BaseRequest<R extends HttpRequest> implements HttpRequest<R> {
 
-    private Instant creation = Util.now();
+    private final Instant creation = Util.now();
     private Optional<ObjectMapper> objectMapper = Optional.empty();
     private String responseEncoding;
     protected Headers headers = new Headers();
@@ -252,6 +255,7 @@ abstract class BaseRequest<R extends HttpRequest> implements HttpRequest<R> {
         return config.getAsyncClient().request(this, JsonResponse::new, wrap(callback), JsonNode.class);
     }
 
+    /*
     @Override
     public <T> HttpResponse<T> asObject(Class<? extends T> responseClass) throws UnirestException {
         return config.getClient().request(this, r -> new ObjectResponse<T>(getObjectMapper(), r, responseClass), responseClass);
@@ -261,6 +265,7 @@ abstract class BaseRequest<R extends HttpRequest> implements HttpRequest<R> {
     public <T> HttpResponse<T> asObject(GenericType<T> genericType) throws UnirestException {
         return config.getClient().request(this, r -> new ObjectResponse<T>(getObjectMapper(), r, genericType), genericType.getTypeClass());
     }
+     */
 
     @Override
     public <T> HttpResponse<T> asObject(Function<RawResponse, T> function) {
@@ -272,6 +277,7 @@ abstract class BaseRequest<R extends HttpRequest> implements HttpRequest<R> {
         return config.getAsyncClient().request(this, funcResponse(function), new CompletableFuture<>(), JsonNode.class);
     }
 
+    /*
     @Override
     public <T> CompletableFuture<HttpResponse<T>> asObjectAsync(Class<? extends T> responseClass) {
         return config.getAsyncClient().request(this,
@@ -303,6 +309,7 @@ abstract class BaseRequest<R extends HttpRequest> implements HttpRequest<R> {
                 wrap(callback),
                 genericType.getTypeClass());
     }
+    */
 
     private <T> Function<RawResponse, HttpResponse<T>> funcResponse(Function<RawResponse, T> function) {
         return r -> new BasicResponse<>(r, function.apply(r));
@@ -379,9 +386,11 @@ abstract class BaseRequest<R extends HttpRequest> implements HttpRequest<R> {
         return headers;
     }
 
+    /*
     protected ObjectMapper getObjectMapper() {
         return objectMapper.orElseGet(config::getObjectMapper);
     }
+     */
 
     @Override
     public int getSocketTimeout() {

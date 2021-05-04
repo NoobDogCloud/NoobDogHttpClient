@@ -38,7 +38,7 @@ class JsonNodeTest {
         JsonNode node = new JsonNode(json);
         assertFalse(node.isArray());
         assertEquals("bar", node.getObject().getString("foo"));
-        assertEquals("bar", node.getArray().getJSONObject(0).getString("foo"));
+        assertEquals("bar", node.getArray().getJson(0).getString("foo"));
         assertEquals(json, node.toString());
     }
 
@@ -47,7 +47,7 @@ class JsonNodeTest {
         String json = "[{\"foo\":\"bar\"}]";
         JsonNode node = new JsonNode(json);
         assertTrue(node.isArray());
-        assertEquals("bar", node.getArray().getJSONObject(0).getString("foo"));
+        assertEquals("bar", node.getArray().getJson(0).getString("foo"));
         assertNull(node.getObject());
         assertEquals(json, node.toString());
     }

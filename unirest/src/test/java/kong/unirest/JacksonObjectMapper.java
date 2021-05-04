@@ -31,7 +31,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
-import kong.unirest.json.JSONObject;
+import org.json.gsc.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -136,9 +136,9 @@ public class JacksonObjectMapper implements ObjectMapper {
 	public static class PatchDeserializer extends JsonDeserializer<JsonPatchItem> {
 		@Override
 		public JsonPatchItem deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
-			String s = jsonParser.readValueAsTree().toString();
-			return new JsonPatchItem(new JSONObject(s));
-		}
+            String s = jsonParser.readValueAsTree().toString();
+            return new JsonPatchItem(JSONObject.build(s));
+        }
 	}
 
 	public static class HttpMethodSerializer extends JsonSerializer<HttpMethod> {

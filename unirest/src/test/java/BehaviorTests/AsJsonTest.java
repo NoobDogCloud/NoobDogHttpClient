@@ -25,14 +25,16 @@
 
 package BehaviorTests;
 
-import kong.unirest.*;
-import kong.unirest.json.JSONObject;
+import kong.unirest.HttpResponse;
+import kong.unirest.HttpStatus;
+import kong.unirest.JsonNode;
+import kong.unirest.Unirest;
+import org.json.gsc.JSONObject;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class AsJsonTest extends BddTest {
 
@@ -42,29 +44,6 @@ class AsJsonTest extends BddTest {
 
         assertEquals(HttpStatus.OK, i.getStatus());
         assertEquals("{}", i.getBody().toString());
-    }
-
-    @Test
-    void toStringAObject() {
-        MockServer.setStringResponse(new JSONObject().put("f", 1).put("a", Arrays.asList(2, 3, 4)).toString());
-        HttpResponse<JsonNode> i = Unirest.get(MockServer.GET).asJson();
-
-        assertEquals("{\"f\":1,\"a\":[2,3,4]}", i.getBody().toString());
-    }
-
-    @Test
-    void toPrettyStringAObject() {
-        MockServer.setStringResponse(new JSONObject().put("f", 1).put("a", Arrays.asList(2, 3, 4)).toString());
-        HttpResponse<JsonNode> i = Unirest.get(MockServer.GET).asJson();
-
-        assertEquals("{\n" +
-                "  \"f\": 1,\n" +
-                "  \"a\": [\n" +
-                "    2,\n" +
-                "    3,\n" +
-                "    4\n" +
-                "  ]\n" +
-                "}", i.getBody().toPrettyString());
     }
 
     @Test
@@ -98,35 +77,6 @@ class AsJsonTest extends BddTest {
     }
 
     @Test
-    void failureToReturnValidJsonWillResultInAnEmptyNode() {
-        HttpResponse<JsonNode> response = Unirest.get(MockServer.INVALID_REQUEST).asJson();
-
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatus());
-        assertNull(response.getBody());
-        assertTrue(response.getParsingError().isPresent());
-        UnirestParsingException ex = response.getParsingError().get();
-        assertEquals("You did something bad", ex.getOriginalBody());
-        assertEquals("kong.unirest.json.JSONException: Invalid JSON",
-                response.getParsingError().get().getMessage());
-
-    }
-
-    @Test
-    void failureToReturnValidJsonWillResultInAnEmptyNodeAsync() {
-        Unirest.get(MockServer.INVALID_REQUEST)
-                .asJsonAsync(new MockCallback<>(this, response -> {
-                    assertEquals(HttpStatus.BAD_REQUEST, response.getStatus());
-                    assertNull(response.getBody());
-                    assertTrue(response.getParsingError().isPresent());
-                    assertEquals("kong.unirest.json.JSONException: Invalid JSON",
-                            response.getParsingError().get().getMessage());
-
-                }));
-
-        assertAsync();
-    }
-
-    @Test
     void doNotEscapeHTML() {
         MockServer.setStringResponse("{\"test\":\"it's a && b || c + 1!?\"}");
 
@@ -139,6 +89,6 @@ class AsJsonTest extends BddTest {
     }
 
     private void assertJson(HttpResponse<JsonNode> i) {
-        assertEquals("bar", i.getBody().getObject().getJSONObject("params").getJSONArray("foo").get(0));
+        assertEquals("bar", i.getBody().getObject().getJson("params").getJsonArray("foo").get(0));
     }
 }

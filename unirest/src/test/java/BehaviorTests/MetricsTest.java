@@ -35,9 +35,8 @@ import java.util.HashMap;
 import java.util.function.Function;
 
 import static BehaviorTests.MockServer.*;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MetricsTest extends BddTest {
     @Test
@@ -172,8 +171,10 @@ class MetricsTest extends BddTest {
                 .routeParam("spark", "joy")
                 .queryString("food", "hamberders")
                 .queryString("colour", "red")
-                .asObject(HashMap.class)
-                .getBody();
+                .asJson()
+                .getBody()
+                .getObject()
+                .toHashMap();
 
         assertEquals("localhost:4567", map.get("host()"));
         assertEquals("/sparkle/joy/yippy", map.get("uri()")); // this is different from what the Spark doc says.

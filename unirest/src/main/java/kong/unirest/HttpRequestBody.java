@@ -25,8 +25,6 @@
 
 package kong.unirest;
 
-import kong.unirest.json.JSONElement;
-
 import java.io.File;
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -120,11 +118,12 @@ class HttpRequestBody extends BaseRequest<HttpRequestWithBody> implements HttpRe
 	 * @param body raw JSONElement
 	 * @return RequestBodyEntity instance
 	 */
+	/*
 	@Override
 	public RequestBodyEntity body(JSONElement body) {
 		return body(body.toString());
 	}
-
+	*/
 	@Override
 	public Charset getCharset() {
 		return charSet;

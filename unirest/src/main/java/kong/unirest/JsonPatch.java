@@ -25,8 +25,9 @@
 
 package kong.unirest;
 
-import kong.unirest.json.JSONArray;
-import kong.unirest.json.JSONObject;
+
+import org.json.gsc.JSONArray;
+import org.json.gsc.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,14 +36,14 @@ import java.util.List;
 
 public class JsonPatch {
 
-    private List<JsonPatchItem> items = new ArrayList<>();
+    private final List<JsonPatchItem> items = new ArrayList<>();
 
     public JsonPatch(){}
 
     public JsonPatch(String fromString){
-        for (Object row : new JSONArray(fromString)) {
-            if(row instanceof JSONObject){
-                items.add(new JsonPatchItem((JSONObject)row));
+        for (Object row : JSONArray.build(fromString)) {
+            if (row instanceof JSONObject) {
+                items.add(new JsonPatchItem((JSONObject) row));
             }
         }
     }
@@ -74,7 +75,7 @@ public class JsonPatch {
     @Override
     public String toString() {
         JSONArray a = new JSONArray();
-        items.forEach(i -> a.put(new JSONObject(i.toString())));
+        items.forEach(i -> a.put(JSONObject.build(i.toString())));
         return a.toString();
     }
 

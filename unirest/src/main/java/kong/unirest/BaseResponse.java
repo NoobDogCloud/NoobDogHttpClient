@@ -122,7 +122,8 @@ abstract class BaseResponse<T> implements HttpResponse<T> {
                 return (E) errorBody;
             }
             try {
-                return config.getObjectMapper().readValue(errorBody, errorClass);
+                // return config.getObjectMapper().readValue(errorBody, errorClass);
+                return null;
             } catch (RuntimeException e) {
                 setParsingException(errorBody, e);
             }
@@ -141,7 +142,8 @@ abstract class BaseResponse<T> implements HttpResponse<T> {
             return null;
         }
         try {
-            return config.getObjectMapper().writeValue(body);
+            // return config.getObjectMapper().writeValue(body);
+            return null;
         } catch (Exception e) {
             return String.valueOf(body);
         }

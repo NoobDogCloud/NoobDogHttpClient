@@ -30,7 +30,10 @@ import java.net.URLDecoder;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -141,7 +144,7 @@ public class Cookie {
                 try{
                     expires = ZonedDateTime.parse(text, f);
                 }catch (DateTimeParseException e){
-
+                    // e.printStackTrace();
                 }
             });
     }
@@ -287,7 +290,7 @@ public class Cookie {
     public enum SameSite {
         None, Strict, Lax;
 
-        private static EnumSet<SameSite> all = EnumSet.allOf(SameSite.class);
+        private static final EnumSet<SameSite> all = EnumSet.allOf(SameSite.class);
 
         public static SameSite parse(String value) {
             return all.stream()

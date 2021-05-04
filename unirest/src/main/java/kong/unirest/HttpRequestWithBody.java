@@ -25,8 +25,6 @@
 
 package kong.unirest;
 
-import kong.unirest.json.JSONElement;
-
 import java.io.File;
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -168,7 +166,7 @@ public interface HttpRequestWithBody extends HttpRequest<HttpRequestWithBody> {
      * @param body the JSONElement
      * @return this request builder
      */
-    RequestBodyEntity body(JSONElement body);
+    // RequestBodyEntity body(JSONElement body);
 
     /**
      * get the current default charset

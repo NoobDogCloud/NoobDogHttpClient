@@ -1,27 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.konghq</groupId>
+    <groupId>gfw</groupId>
     <artifactId>unirest-java-parent</artifactId>
     <packaging>pom</packaging>
-    <version>3.11.12-SNAPSHOT</version>
-    <name>unirest</name>
-    <description>Parent pom for unirest packages</description>
-    <url>http://github.com/Kong/unirest-java/</url>
-
-    <licenses>
-        <license>
-            <name>MIT</name>
-            <url>http://opensource.org/licenses/MIT</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
+    <version>2.001</version>
 
     <modules>
         <module>unirest</module>
-        <module>object-mapper-gson</module>
-        <module>object-mapper-jackson</module>
-        <module>unirest-mocks</module>
         <!--<module>bad-maven-test</module>-->
     </modules>
 
@@ -34,59 +20,6 @@
         <mockito.version>3.5.13</mockito.version>
         <maven-checkstyle-plugin.version>3.1.1</maven-checkstyle-plugin.version>
     </properties>
-
-    <scm>
-        <url>https://github.com/Kong/unirest-java</url>
-        <connection>scm:git:git@github.com:Kong/unirest-java.git</connection>
-        <developerConnection>scm:git:git@github.com:Kong/unirest-java.git</developerConnection>
-        <tag>HEAD</tag>
-    </scm>
-
-    <developers>
-        <developer>
-            <id>Ryber</id>
-            <name>Ryan Bergman</name>
-            <url>https://github.com/ryber</url>
-            <roles>
-                <role>Maintainer</role>
-            </roles>
-        </developer>
-    </developers>
-
-    <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-        <repository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-    </distributionManagement>
-
-    <profiles>
-        <profile>
-            <id>ossrh</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.6</version>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 
     <build>
         <plugins>
@@ -236,17 +169,6 @@
                     <tagNameFormat>v@{project.version}</tagNameFormat>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.8</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <serverId>ossrh</serverId>
-                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                </configuration>
-            </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -287,53 +209,6 @@
                         <goals>
                             <goal>jar</goal>
                         </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <version>1.4.1</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.sonatype.ossindex.maven</groupId>
-                        <artifactId>ossindex-maven-enforcer-rules</artifactId>
-                        <version>3.1.0</version>
-                    </dependency>
-                </dependencies>
-                <executions>
-                    <execution>
-                        <id>vulnerability-checks</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <banVulnerable implementation="org.sonatype.ossindex.maven.enforcer.BanVulnerableDependencies">
-                                    <excludeVulnerabilityIds>
-
-                                    </excludeVulnerabilityIds>
-                                </banVulnerable>
-                            </rules>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>enforce-versions</id>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <requireMavenVersion>
-                                    <!--at least maven 3.2-->
-                                    <version>[3.2,)</version>
-                                </requireMavenVersion>
-                                <requireJavaVersion>
-                                    <version>1.8</version>
-                                </requireJavaVersion>
-                            </rules>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>

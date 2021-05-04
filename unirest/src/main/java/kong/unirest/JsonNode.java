@@ -25,13 +25,12 @@
 
 package kong.unirest;
 
-import kong.unirest.json.JSONArray;
-import kong.unirest.json.JSONException;
-import kong.unirest.json.JSONObject;
+import org.json.gsc.JSONArray;
+import org.json.gsc.JSONObject;
 
 public class JsonNode {
 
-    private JSONObject jsonObject;
+    private final JSONObject jsonObject;
     private JSONArray jsonArray;
 
     private boolean array;
@@ -40,12 +39,14 @@ public class JsonNode {
         if (json == null || "".equals(json.trim())) {
             jsonObject = new JSONObject();
         } else {
-            try {
-                jsonObject = new JSONObject(json);
-            } catch (JSONException e) {
+            jsonObject = JSONObject.build(json);
+            if (JSONObject.isInvalided(jsonObject)) {
                 // It may be an array
-                jsonArray = new JSONArray(json);
+                jsonArray = JSONArray.toJSONArray(json);
                 array = true;
+                if (JSONArray.isInvalided(jsonArray)) {
+                    jsonArray = JSONArray.build();
+                }
             }
         }
     }
@@ -58,7 +59,7 @@ public class JsonNode {
         JSONArray result = this.jsonArray;
         if (array == false) {
             result = new JSONArray();
-            result.put(jsonObject);
+            result.add(jsonObject);
         }
         return result;
     }
@@ -78,9 +79,9 @@ public class JsonNode {
 
     public String toPrettyString() {
         if (isArray()) {
-            return jsonArray.toString(2);
+            return jsonArray.toPrettyString();
         } else {
-            return jsonObject.toString(2);
+            return jsonObject.toPrettyString();
         }
     }
 }

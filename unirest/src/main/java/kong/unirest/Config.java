@@ -37,7 +37,10 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyStore;
 import java.time.Duration;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -54,9 +57,9 @@ public class Config {
 
     private Optional<Client> client = Optional.empty();
     private Optional<AsyncClient> asyncClient = Optional.empty();
-    private Optional<ObjectMapper> objectMapper = Optional.of(new JsonObjectMapper());
+    // private Optional<ObjectMapper> objectMapper = Optional.of(new JsonObjectMapper());
 
-    private List<HttpRequestInterceptor> apacheinterceptors = new ArrayList<>();
+    private final List<HttpRequestInterceptor> apacheinterceptors = new ArrayList<>();
     private Headers headers;
     private Proxy proxy;
     private int connectionTimeout;
@@ -112,7 +115,7 @@ public class Config {
         protocols = null;
         interceptor = new CompoundInterceptor();
 
-        this.objectMapper = Optional.of(new JsonObjectMapper());
+        // this.objectMapper = Optional.of(new JsonObjectMapper());
         try {
             asyncBuilder = ApacheAsyncClient::new;
             clientBuilder = ApacheClient::new;
@@ -233,10 +236,12 @@ public class Config {
      * @param om Custom implementation of ObjectMapper interface
      * @return this config object
      */
+    /*
     public Config setObjectMapper(ObjectMapper om) {
         this.objectMapper = Optional.ofNullable(om);
         return this;
     }
+     */
 
     /**
      * Set a custom SSLContext.
@@ -865,9 +870,11 @@ public class Config {
      * @return a configured object mapper
      * @throws UnirestException if none has been configured.
      */
+    /*
     public ObjectMapper getObjectMapper() {
         return objectMapper.orElseThrow(() -> new UnirestException("No Object Mapper Configured. Please config one with Unirest.config().setObjectMapper"));
     }
+     */
 
     private void validateClientsNotRunning() {
         if (client.isPresent() || asyncClient.isPresent()) {

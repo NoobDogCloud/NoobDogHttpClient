@@ -25,7 +25,7 @@
 
 package kong.unirest;
 
-import kong.unirest.json.JSONObject;
+import org.json.gsc.JSONObject;
 
 import java.util.Objects;
 

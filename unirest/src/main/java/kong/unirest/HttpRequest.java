@@ -258,7 +258,7 @@ public interface HttpRequest<R extends HttpRequest>  {
      * @param <T> the return type
      * @return a response
      */
-    <T> HttpResponse<T> asObject(Class<? extends T> responseClass);
+    // <T> HttpResponse<T> asObject(Class<? extends T> responseClass);
 
     /**
      * Executes the request and returns the response with the body mapped into T by a configured ObjectMapper
@@ -266,7 +266,7 @@ public interface HttpRequest<R extends HttpRequest>  {
      * @param <T> the return type
      * @return a response
      */
-    <T> HttpResponse<T> asObject(GenericType<T> genericType);
+    // <T> HttpResponse<T> asObject(GenericType<T> genericType);
 
     /**
      * Execute the request and pass the raw response to a function for mapping.
@@ -284,7 +284,7 @@ public interface HttpRequest<R extends HttpRequest>  {
      * @param <T> the return type
      * @return a CompletableFuture of a response
      */
-    <T> CompletableFuture<HttpResponse<T>> asObjectAsync(Class<? extends T> responseClass);
+    // <T> CompletableFuture<HttpResponse<T>> asObjectAsync(Class<? extends T> responseClass);
 
     /**
      * Executes the request asynchronously, mapping to a type via the configured object mapper and then passed to a callback handler.
@@ -293,7 +293,7 @@ public interface HttpRequest<R extends HttpRequest>  {
      * @param <T> the return type
      * @return a CompletableFuture of a HttpResponse containing the body of T
      */
-    <T> CompletableFuture<HttpResponse<T>> asObjectAsync(Class<? extends T> responseClass, Callback<T> callback);
+    // <T> CompletableFuture<HttpResponse<T>> asObjectAsync(Class<? extends T> responseClass, Callback<T> callback);
 
     /**
      * Executes the request asynchronously, and use a GenericType with the ObjectMapper
@@ -301,7 +301,7 @@ public interface HttpRequest<R extends HttpRequest>  {
      * @param <T> the type of the response
      * @return a CompletableFuture of a HttpResponse containing the body of T
      */
-    <T> CompletableFuture<HttpResponse<T>> asObjectAsync(GenericType<T> genericType);
+    // <T> CompletableFuture<HttpResponse<T>> asObjectAsync(GenericType<T> genericType);
 
     /**
      * Executes the request asynchronously, and use a GenericType with the ObjectMapper
@@ -310,7 +310,7 @@ public interface HttpRequest<R extends HttpRequest>  {
      * @param <T> the type of the response
      * @return a CompletableFuture of a HttpResponse containing the body of T
      */
-    <T> CompletableFuture<HttpResponse<T>> asObjectAsync(GenericType<T> genericType, Callback<T> callback);
+    // <T> CompletableFuture<HttpResponse<T>> asObjectAsync(GenericType<T> genericType, Callback<T> callback);
 
     /**
      * Executes the request asynchronously, and pass the raw response to a function for mapping.
