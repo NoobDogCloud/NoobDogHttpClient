@@ -290,10 +290,10 @@ public class Cookie {
     public enum SameSite {
         None, Strict, Lax;
 
-        private static final EnumSet<SameSite> all = EnumSet.allOf(SameSite.class);
+        private static final EnumSet<SameSite> ALL = EnumSet.allOf(SameSite.class);
 
         public static SameSite parse(String value) {
-            return all.stream()
+            return ALL.stream()
                     .filter(e -> e.name().equalsIgnoreCase(value))
                     .findFirst()
                     .orElse(null);
