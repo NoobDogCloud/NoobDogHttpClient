@@ -327,6 +327,18 @@ public class Config {
         return this;
     }
 
+    public Config clientCertificateStore(InputStream fileStream, String password) {
+        verifySecurityConfig(this.sslContext);
+        try {
+            this.keystorePassword = () -> password;
+            this.keystore = KeyStore.getInstance("PKCS12");
+            this.keystore.load(fileStream, keystorePassword.get().toCharArray());
+        } catch (Exception e) {
+            throw new UnirestConfigException(e);
+        }
+        return this;
+    }
+
     /**
      * Set the connection timeout
      *
