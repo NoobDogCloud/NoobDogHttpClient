@@ -17,7 +17,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <main.dir>${project.basedir}</main.dir>
         <junit.version>5.7.0</junit.version>
-        <mockito.version>3.5.13</mockito.version>
+        <mockito.version>4.0.0</mockito.version>
         <maven-checkstyle-plugin.version>3.1.1</maven-checkstyle-plugin.version>
     </properties>
 
@@ -135,8 +135,8 @@
                     <fork>true</fork>
                     <meminitial>128m</meminitial>
                     <maxmem>512m</maxmem>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>8</source>
+                    <target>8</target>
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
@@ -255,7 +255,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>30.1-jre</version>
+            <version>31.0.1-jre</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -279,9 +279,12 @@
 
     <distributionManagement>
         <repository>
-            <id>GrapeSoft</id>
-            <name>GrapeSoft</name>
-            <url>http://mvn.putao282.com:8081/repository/GrapeSoft/</url>
+            <id>rdc-releases</id>
+            <url>https://packages.aliyun.com/maven/repository/2008022-release-LfFRDq</url>
         </repository>
+        <snapshotRepository>
+            <id>rdc-snapshots</id>
+            <url>https://packages.aliyun.com/maven/repository/2008022-snapshot-oYlpxF</url>
+        </snapshotRepository>
     </distributionManagement>
 </project>
