@@ -160,7 +160,7 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.2.0</version>
                 <configuration>
-                    <source>8</source>
+                    <source>17</source>
                 </configuration>
                 <executions>
                     <execution>
@@ -179,7 +179,7 @@
                     <!-- Configured in pluginManagement instead of plugins, because we do not want a shaded parent POM -->
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-shade-plugin</artifactId>
-                    <version>3.2.4</version>
+                    <version>3.3.0-SNAPSHOT</version>
                     <executions>
                         <execution>
                             <phase>package</phase>
@@ -278,6 +278,13 @@
             </plugin>
         </plugins>
     </reporting>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>maven-snapshots</id>
+            <url>https://repository.apache.org/content/repositories/snapshots/</url>
+        </pluginRepository>
+    </pluginRepositories>
 
     <distributionManagement>
         <repository>
