@@ -15,3 +15,6 @@ Gemfile.lock
 .jekyll-metadata
 1.jpg
 
+temp/JsonNode.java
+temp/JsonPatch.java
+temp/JsonPatchItem.java
