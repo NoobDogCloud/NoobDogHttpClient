@@ -38,6 +38,7 @@ import java.io.Closeable;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -49,17 +50,18 @@ public class ApacheClient extends BaseApacheClient implements Client {
     private boolean hookset;
 
     public ApacheClient(Config config) {
+        this(config, a -> {
+        });
+    }
+
+    public ApacheClient(Config config, Consumer<HttpClientBuilder> builderConfig) {
         this.config = config;
         security = new SecurityConfig(config);
         manager = security.createManager();
 
-        HttpClientBuilder cb = HttpClients.custom()
-                .setDefaultRequestConfig(RequestOptions.toRequestConfig(config))
-                .setDefaultCredentialsProvider(toApacheCreds(config.getProxy()))
-                .setConnectionManager(manager)
-                .evictIdleConnections(30, TimeUnit.SECONDS);
-
+        HttpClientBuilder cb = HttpClients.custom();
         setOptions(cb);
+        builderConfig.accept(cb);
         client = cb.build();
     }
 
@@ -71,42 +73,19 @@ public class ApacheClient extends BaseApacheClient implements Client {
         this.manager = clientManager;
     }
 
-    public ApacheClient(HttpClient httpClient, Config config){
+    public ApacheClient(HttpClient httpClient, Config config) {
         this.client = httpClient;
         this.config = config;
         this.security = new SecurityConfig(config);
         this.manager = null;
     }
 
-    private void setOptions(HttpClientBuilder cb) {
-        security.configureSecurity(cb);
-        if (!config.isAutomaticRetries()) {
-            cb.disableAutomaticRetries();
-        }
-        if (!config.isRequestCompressionOn()) {
-            cb.disableContentCompression();
-        }
-        if (config.useSystemProperties()) {
-            cb.useSystemProperties();
-        }
-        if (!config.getFollowRedirects()) {
-            cb.disableRedirectHandling();
-        }
-        if (!config.getEnabledCookieManagement()) {
-            cb.disableCookieManagement();
-        }
-        config.getInterceptor().stream().forEach(cb::addInterceptorFirst);
-        if (config.shouldAddShutdownHook()) {
-            registerShutdownHook();
-        }
+    public static Builder builder() {
+        return new Builder();
     }
 
-    @Override
-    public void registerShutdownHook() {
-        if(!hookset) {
-            hookset = true;
-            Runtime.getRuntime().addShutdownHook(new Thread(this::close, "Unirest Apache Client Shutdown Hook"));
-        }
+    public static Builder builder(Consumer<HttpClientBuilder> configOptions) {
+        return new Builder(configOptions);
     }
 
 
@@ -145,12 +124,48 @@ public class ApacheClient extends BaseApacheClient implements Client {
     }
 
     @Override
+    public void registerShutdownHook() {
+        if (!hookset) {
+            hookset = true;
+            Runtime.getRuntime().addShutdownHook(new Thread(this::close, "Unirest Apache Client Shutdown Hook"));
+        }
+    }
+
+    private void setOptions(HttpClientBuilder cb) {
+        cb.setDefaultRequestConfig(RequestOptions.toRequestConfig(config))
+                .setDefaultCredentialsProvider(toApacheCreds(config.getProxy()))
+                .setConnectionManager(manager)
+                .evictIdleConnections(30, TimeUnit.SECONDS);
+
+        security.configureSecurity(cb);
+        if (!config.isAutomaticRetries()) {
+            cb.disableAutomaticRetries();
+        }
+        if (!config.isRequestCompressionOn()) {
+            cb.disableContentCompression();
+        }
+        if (config.useSystemProperties()) {
+            cb.useSystemProperties();
+        }
+        if (!config.getFollowRedirects()) {
+            cb.disableRedirectHandling();
+        }
+        if (!config.getEnabledCookieManagement()) {
+            cb.disableCookieManagement();
+        }
+        config.getInterceptor().stream().forEach(cb::addInterceptorFirst);
+        if (config.shouldAddShutdownHook()) {
+            registerShutdownHook();
+        }
+    }
+
+    @Override
     public Stream<Exception> close() {
         return Util.collectExceptions(Util.tryCast(client, CloseableHttpClient.class)
                         .map(c -> Util.tryDo(c, Closeable::close))
                         .filter(Optional::isPresent)
                         .map(Optional::get),
-                Util.tryDo(manager, m -> m.close())
+                Util.tryDo(manager, PoolingHttpClientConnectionManager::close)
         );
     }
 
@@ -160,17 +175,30 @@ public class ApacheClient extends BaseApacheClient implements Client {
 
     public static class Builder implements Function<Config, Client> {
 
-        private HttpClient baseClient;
+        private final Optional<HttpClient> baseClient;
         private RequestConfigFactory configFactory;
+        private Consumer<HttpClientBuilder> options = c -> {
+        };
 
         public Builder(HttpClient baseClient) {
-            this.baseClient = baseClient;
+            this.baseClient = Optional.ofNullable(baseClient);
+        }
+
+        public Builder() {
+            baseClient = Optional.empty();
+        }
+
+        public Builder(Consumer<HttpClientBuilder> configOptions) {
+            Objects.requireNonNull(configOptions, "Config Options Cannot Be Null");
+            baseClient = Optional.empty();
+            this.options = configOptions;
         }
 
         @Override
         public Client apply(Config config) {
-            ApacheClient apacheClient = new ApacheClient(baseClient, config);
-            if(configFactory != null){
+            ApacheClient apacheClient = baseClient.map(c -> new ApacheClient(c, config))
+                    .orElseGet(() -> new ApacheClient(config, options));
+            if (configFactory != null) {
                 apacheClient.setConfigFactory(configFactory);
             }
             return apacheClient;

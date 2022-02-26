@@ -34,7 +34,7 @@ import static java.util.stream.Collectors.toSet;
 public class Headers {
 
     private static final long serialVersionUID = 71310341388734766L;
-    private List<Header> headers = new ArrayList<>();
+    private final List<Header> headers = new ArrayList<>();
 
     public Headers() {
     }
@@ -176,8 +176,12 @@ public class Headers {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) { return true;}
-        if (o == null || getClass() != o.getClass()) { return false; }
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Headers headers1 = (Headers) o;
         return Objects.equals(headers, headers1.headers);
     }
@@ -185,6 +189,33 @@ public class Headers {
     @Override
     public int hashCode() {
         return Objects.hash(headers);
+    }
+
+    public void setBasicAuth(String username, String password) {
+        this.replace("Authorization", Util.toBasicAuthValue(username, password));
+    }
+
+    public void accepts(String value) {
+        add(HeaderNames.ACCEPT, value);
+    }
+
+    public void add(Map<String, String> headerMap) {
+        if (headerMap != null) {
+            for (Map.Entry<String, String> entry : headerMap.entrySet()) {
+                add(entry.getKey(), entry.getValue());
+            }
+        }
+    }
+
+    /**
+     * Replace all headers from a given map.
+     *
+     * @param headerMap the map of headers
+     */
+    public void replace(Map<String, String> headerMap) {
+        if (headerMap != null) {
+            headerMap.forEach(this::replace);
+        }
     }
 
     static class Entry implements Header {

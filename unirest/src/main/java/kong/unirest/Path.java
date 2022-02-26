@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
 
 class Path {
     private String url;
-    private String rawPath;
+    private final String rawPath;
 
     Path(String url, String defaultBasePath) {
         if(defaultBasePath != null && url != null && !url.toLowerCase().startsWith("http")){
@@ -109,7 +109,11 @@ class Path {
 
     @Override
     public String toString() {
-        return url;
+        return escape(url);
+    }
+
+    private String escape(String string) {
+        return string.replaceAll(" ", "%20").replaceAll("\t", "%09");
     }
 
     public String rawPath() {
@@ -117,7 +121,7 @@ class Path {
     }
 
     public String baseUrl() {
-        if(url != null && url.contains("?")){
+        if (url != null && url.contains("?")) {
             return url.substring(0, url.indexOf("?"));
         }
         return url;

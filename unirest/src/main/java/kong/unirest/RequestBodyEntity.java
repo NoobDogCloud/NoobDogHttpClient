@@ -25,6 +25,7 @@
 
 package kong.unirest;
 
+import java.io.InputStream;
 import java.nio.charset.Charset;
 
 public interface RequestBodyEntity extends HttpRequest<RequestBodyEntity>, Body {
@@ -44,10 +45,19 @@ public interface RequestBodyEntity extends HttpRequest<RequestBodyEntity>, Body 
 
     /**
      * Set JSON on the body
+     *
      * @param jsonBody the JsonNode
      * @return this request builder
      */
     RequestBodyEntity body(JsonNode jsonBody);
+
+    /**
+     * Set a InputStream as the body
+     *
+     * @param body the Object
+     * @return this request builder
+     */
+    RequestBodyEntity body(InputStream body);
 
     /**
      * Set JSON on the body
@@ -89,4 +99,12 @@ public interface RequestBodyEntity extends HttpRequest<RequestBodyEntity>, Body 
      * @return this request builder
      */
     RequestBodyEntity contentType(String type);
+
+    /**
+     * Set a Progress upload monitor suitable for drawing progress bars and whatnot. Works With
+     *
+     * @param monitor a monitor
+     * @return The same MultipartBody
+     */
+    RequestBodyEntity uploadMonitor(ProgressMonitor monitor);
 }

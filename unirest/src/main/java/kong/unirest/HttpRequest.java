@@ -105,14 +105,24 @@ public interface HttpRequest<R extends HttpRequest>  {
 
     /**
      * Add headers as a map
+     *
      * @param headerMap a map of headers
      * @return this request builder
      */
     R headers(Map<String, String> headerMap);
 
     /**
+     * Replace headers as a map
+     *
+     * @param headerMap a map of headers
+     * @return this request builder
+     */
+    R headersReplace(Map<String, String> headerMap);
+
+    /**
      * Add a simple cookie header
-     * @param name the name of the cookie
+     *
+     * @param name  the name of the cookie
      * @param value the value of the cookie
      * @return this request builder
      */

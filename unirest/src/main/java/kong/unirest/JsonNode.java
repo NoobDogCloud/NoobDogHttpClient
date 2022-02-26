@@ -57,7 +57,7 @@ public class JsonNode {
 
     public JSONArray getArray() {
         JSONArray result = this.jsonArray;
-        if (array == false) {
+        if (!array) {
             result = new JSONArray();
             result.add(jsonObject);
         }

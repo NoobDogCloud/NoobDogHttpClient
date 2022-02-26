@@ -25,16 +25,21 @@
 
 package kong.unirest.apache;
 
-import kong.unirest.*;
+import kong.unirest.Body;
+import kong.unirest.BodyPart;
+import kong.unirest.HttpRequest;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.entity.mime.content.*;
+import org.apache.http.entity.mime.content.ByteArrayBody;
+import org.apache.http.entity.mime.content.ContentBody;
+import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.io.File;
@@ -69,12 +74,20 @@ class ApacheBodyMapper {
     
     private HttpEntity mapToUniBody(Body b) {
         BodyPart bodyPart = b.uniPart();
-        if(bodyPart == null){
+        if (bodyPart == null) {
             return new StringEntity("", StandardCharsets.UTF_8);
-        } else if(String.class.isAssignableFrom(bodyPart.getPartType())){
+        } else if (String.class.isAssignableFrom(bodyPart.getPartType())) {
             return new StringEntity((String) bodyPart.getValue(), b.getCharset());
+        } else if (InputStream.class.isAssignableFrom(bodyPart.getPartType())) {
+            if (b.getMonitor() != null) {
+                return new InputStreamEntity(new MonitoringInputStream(
+                        (InputStream) bodyPart.getValue(),
+                        b.getMonitor()
+                ));
+            }
+            return new InputStreamEntity((InputStream) bodyPart.getValue());
         } else {
-            return new ByteArrayEntity((byte[])bodyPart.getValue());
+            return new ByteArrayEntity((byte[]) bodyPart.getValue());
         }
     }
 

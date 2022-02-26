@@ -132,39 +132,51 @@ public interface HttpRequestWithBody extends HttpRequest<HttpRequestWithBody> {
 
     /**
      * Set a String as the body of the request
+     *
      * @param body the String
-     * @return this request builder
+     * @return a RequestBodyEntity version of the builder with a body
      */
     RequestBodyEntity body(String body);
 
     /**
-     * Set a Object as the body of the request. This will be serialized with one of the following methods:
-     *      - Strings are native
-     *      - JSONElements use their native toString
-     *      - Everything else will pass through the supplied ObjectMapper
+     * Set a InputStream as the body
+     *
      * @param body the Object
-     * @return this request builder
+     * @return a RequestBodyEntity version of the builder with a body
+     */
+    RequestBodyEntity body(InputStream body);
+
+    /**
+     * Set a Object as the body of the request. This will be serialized with one of the following methods:
+     * - Strings are native
+     * - JSONElements use their native toString
+     * - Everything else will pass through the supplied ObjectMapper
+     *
+     * @param body the Object
+     * @return a RequestBodyEntity version of the builder with a body
      */
     RequestBodyEntity body(Object body);
 
     /**
      * Set a byte array as the body of the request
+     *
      * @param body the byte[]
-     * @return this request builder
+     * @return a RequestBodyEntity version of the builder with a body
      */
     RequestBodyEntity body(byte[] body);
 
     /**
      * Set JSON on the body
+     *
      * @param body the JsonNode
-     * @return this request builder
+     * @return a RequestBodyEntity version of the builder with a body
      */
     RequestBodyEntity body(JsonNode body);
 
     /**
      * Set JSON on the body
      * @param body the JSONElement
-     * @return this request builder
+     * @return a RequestBodyEntity version of the builder with a body
      */
     // RequestBodyEntity body(JSONElement body);
 

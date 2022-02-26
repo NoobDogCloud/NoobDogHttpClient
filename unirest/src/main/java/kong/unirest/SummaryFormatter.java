@@ -49,9 +49,7 @@ class SummaryFormatter implements Function<HttpRequest<?>, String> {
                 toMultiPartAproximation(b, sb);
             } else {
                 Path path = new Path("/");
-                b.multiParts().stream().filter(p -> !p.isFile()).forEach(p  -> {
-                    path.queryString(p.getName(), p.getValue());
-                });
+                b.multiParts().stream().filter(p -> !p.isFile()).forEach(p -> path.queryString(p.getName(), p.getValue()));
                 sb.add(path.getQueryString());
             }
         });

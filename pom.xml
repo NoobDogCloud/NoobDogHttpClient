@@ -7,6 +7,7 @@
     <packaging>pom</packaging>
     <version>2.0.1</version>
 
+
     <modules>
         <module>unirest</module>
         <!--<module>bad-maven-test</module>-->
@@ -16,9 +17,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <main.dir>${project.basedir}</main.dir>
-        <junit.version>5.7.0</junit.version>
+        <junit.version>5.7.2</junit.version>
         <mockito.version>4.0.0</mockito.version>
-        <maven-checkstyle-plugin.version>3.1.1</maven-checkstyle-plugin.version>
+        <jackson.version>2.12.4</jackson.version>
+        <maven-checkstyle-plugin.version>3.1.2</maven-checkstyle-plugin.version>
     </properties>
 
     <build>
@@ -69,9 +71,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.22.2</version>
-                <configuration>
-                    <argLine>-Duser.timezone=UTC</argLine>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -88,6 +87,9 @@
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
+                        <configuration>
+                            <propertyName>itCoverageAgent</propertyName>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>default-report</id>
@@ -135,8 +137,8 @@
                     <fork>true</fork>
                     <meminitial>128m</meminitial>
                     <maxmem>512m</maxmem>
-                    <source>8</source>
-                    <target>8</target>
+                    <source>17</source>
+                    <target>17</target>
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
@@ -255,7 +257,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>31.0.1-jre</version>
+            <version>30.1.1-jre</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

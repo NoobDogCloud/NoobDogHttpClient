@@ -142,6 +142,7 @@ abstract class BaseResponse<T> implements HttpResponse<T> {
             return null;
         }
         try {
+
             // return config.getObjectMapper().writeValue(body);
             return null;
         } catch (Exception e) {

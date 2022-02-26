@@ -88,6 +88,8 @@ public class Config {
     private HostnameVerifier hostnameVerifier;
     private String defaultBaseUrl;
     private CacheManager cache;
+    private boolean retry = false;
+    private int maxRetries;
 
     public Config() {
         setDefaults();
@@ -114,12 +116,14 @@ public class Config {
         ciphers = null;
         protocols = null;
         interceptor = new CompoundInterceptor();
+        retry = false;
+        maxRetries = 10;
 
         // this.objectMapper = Optional.of(new JsonObjectMapper());
         try {
             asyncBuilder = ApacheAsyncClient::new;
             clientBuilder = ApacheClient::new;
-        }catch (BootstrapMethodError e){
+        } catch (BootstrapMethodError e) {
             throw new UnirestException("It looks like you are using an older version of Apache Http Client. \n" +
                     "For security and performance reasons Unirest requires the most recent version. Please upgrade.", e);
         }
@@ -648,6 +652,30 @@ public class Config {
         return this;
     }
 
+    /**
+     * Automatically retry synchronous requests on 429/529 responses with the Retry-After response header
+     * Default is false
+     *
+     * @param value a bool is its true or not.
+     * @return this config object
+     */
+    public Config retryAfter(boolean value) {
+        return retryAfter(value, 10);
+    }
+
+    /**
+     * Automatically retry synchronous requests on 429/529 responses with the Retry-After response header
+     * Default is false
+     *
+     * @param value            a bool is its true or not.
+     * @param maxRetryAttempts max retry attempts
+     * @return this config object
+     */
+    public Config retryAfter(boolean value, int maxRetryAttempts) {
+        this.retry = value;
+        this.maxRetries = maxRetryAttempts;
+        return this;
+    }
 
     /**
      * Sugar!
@@ -657,7 +685,7 @@ public class Config {
      * @param duration of ttl.
      * @return this config object
      */
-    public Config connectionTTL(Duration duration){
+    public Config connectionTTL(Duration duration) {
         this.ttl = duration.toMillis();
         return this;
     }
@@ -884,7 +912,7 @@ public class Config {
      */
     /*
     public ObjectMapper getObjectMapper() {
-        return objectMapper.orElseThrow(() -> new UnirestException("No Object Mapper Configured. Please config one with Unirest.config().setObjectMapper"));
+        return objectMapper.orElseThrow(() -> new UnirestConfigException("No Object Mapper Configured. Please config one with Unirest.config().setObjectMapper"));
     }
      */
 
@@ -1037,5 +1065,19 @@ public class Config {
      */
     public String getDefaultBaseUrl() {
         return this.defaultBaseUrl;
+    }
+
+    /**
+     * @return if unirest will retry requests on 429/529
+     */
+    public boolean isAutomaticRetryAfter() {
+        return retry;
+    }
+
+    /**
+     * @return the max number of times to attempt to do a 429/529 retry-after
+     */
+    public int maxRetries() {
+        return maxRetries;
     }
 }

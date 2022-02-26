@@ -41,7 +41,9 @@ import org.apache.http.nio.conn.SchemeIOSessionStrategy;
 import org.apache.http.nio.conn.ssl.SSLIOSessionStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
 
+import java.io.Closeable;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
@@ -170,11 +172,11 @@ class ApacheAsyncConfig {
 
     public Stream<Exception> close() {
         return Util.collectExceptions(Util.tryCast(client, CloseableHttpAsyncClient.class)
-                        .filter(c -> c.isRunning())
-                        .map(c -> Util.tryDo(c, d -> d.close()))
-                        .filter(c -> c.isPresent())
-                        .map(c -> c.get()),
-                Util.tryDo(manager, m -> m.shutdown()),
-                Util.tryDo(syncMonitor, m -> m.interrupt()));
+                        .filter(CloseableHttpAsyncClient::isRunning)
+                        .map(c -> Util.tryDo(c, Closeable::close))
+                        .filter(Optional::isPresent)
+                        .map(Optional::get),
+                Util.tryDo(manager, PoolingNHttpClientConnectionManager::shutdown),
+                Util.tryDo(syncMonitor, Thread::interrupt));
     }
 }
