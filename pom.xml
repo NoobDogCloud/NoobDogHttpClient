@@ -5,7 +5,7 @@
     <groupId>GrapeSoft</groupId>
     <artifactId>unirest-gsc-parent</artifactId>
     <packaging>pom</packaging>
-    <version>2.0.1</version>
+    <version>3.0.0</version>
 
 
     <modules>

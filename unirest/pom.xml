@@ -5,7 +5,7 @@
     <parent>
         <groupId>GrapeSoft</groupId>
         <artifactId>unirest-gsc-parent</artifactId>
-        <version>2.0.1</version>
+        <version>3.0.0</version>
     </parent>
 
     <description></description>
@@ -20,7 +20,8 @@
         <dependency>
             <groupId>GrapeSoft</groupId>
             <artifactId>gfwJson</artifactId>
-            <version>${project.parent.version}</version>
+            <version>3.0.0</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
